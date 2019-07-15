@@ -64,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
                 user.setPassword(password);
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
+                final Gson gson = gsonBuilder.create();
 
                 final String requestBody = gson.toJson(user);
 
@@ -75,6 +75,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        User user = gson.fromJson(response.toString(), User.class);
+                        UserSingleton.getInstance().setUser(user);
+
                         Intent intent = new Intent(SignUpActivity.this, MoviesActivity.class);
                         startActivity(intent);
                     }
@@ -108,7 +111,6 @@ public class SignUpActivity extends AppCompatActivity {
                 };
 
                 queue.add(jsonObjectRequest);
-
             }
         });
     }

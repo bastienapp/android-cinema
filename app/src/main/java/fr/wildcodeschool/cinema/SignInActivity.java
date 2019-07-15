@@ -2,6 +2,7 @@ package fr.wildcodeschool.cinema;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -64,7 +65,7 @@ public class SignInActivity extends AppCompatActivity {
                 user.setPassword(password);
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
+                final Gson gson = gsonBuilder.create();
 
                 final String requestBody = gson.toJson(user);
 
@@ -75,6 +76,9 @@ public class SignInActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        User user = gson.fromJson(response.toString(), User.class);
+                        UserSingleton.getInstance().setUser(user);
+
                         Intent intent = new Intent(SignInActivity.this, MoviesActivity.class);
                         startActivity(intent);
                     }

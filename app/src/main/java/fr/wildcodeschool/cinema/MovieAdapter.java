@@ -22,7 +22,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
-                    .inflate(R.layout.item_movie, parent);
+                    .inflate(R.layout.item_movie, parent, false);
         }
         Movie movie = getItem(position);
         TextView tvMovieTitle = convertView.findViewById(R.id.tvMovieTitle);

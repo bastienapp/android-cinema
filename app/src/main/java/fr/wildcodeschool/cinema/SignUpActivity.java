@@ -2,6 +2,7 @@ package fr.wildcodeschool.cinema;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +52,10 @@ public class SignUpActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
                 if (email.isEmpty() || password.isEmpty()) {
-                    // TODO : afficher un message d'erreur à l'utilisateur
+                    new AlertDialog.Builder(SignUpActivity.this)
+                            .setTitle("Error")
+                            .setMessage("Please fill your email and password")
+                            .show();
                     return;
                 }
                 RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
@@ -78,7 +82,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        String str = error.getMessage();
+                        new AlertDialog.Builder(SignUpActivity.this)
+                                .setTitle("Error")
+                                .setMessage("Something went wrong !")
+                                .show();
                     }
                 }) {
                     @Override

@@ -2,6 +2,7 @@ package fr.wildcodeschool.cinema;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Consumer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -58,59 +59,18 @@ public class SignUpActivity extends AppCompatActivity {
                             .show();
                     return;
                 }
-                RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
                 User user = new User();
                 user.setEmail(email);
                 user.setPassword(password);
 
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                final Gson gson = gsonBuilder.create();
-
-                final String requestBody = gson.toJson(user);
-
-                String url = "http://10.0.2.2:8080/users/signUp";
-
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                        url, null, new Response.Listener<JSONObject>() {
-
+                VolleySingleton.getInstance(SignUpActivity.this).signUp(user, new Consumer<User>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        User user = gson.fromJson(response.toString(), User.class);
+                    public void accept(User user) {
                         UserSingleton.getInstance().setUser(user);
-
                         Intent intent = new Intent(SignUpActivity.this, MoviesActivity.class);
                         startActivity(intent);
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        new AlertDialog.Builder(SignUpActivity.this)
-                                .setTitle("Error")
-                                .setMessage("Something went wrong !")
-                                .show();
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json");
-                        return headers;
-                    }
-
-                    @Override
-                    public byte[] getBody() {
-                        try {
-                            return requestBody == null ? null : requestBody.getBytes("utf-8");
-                        } catch (UnsupportedEncodingException uee) {
-                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                    requestBody, "utf-8");
-                            return null;
-                        }
-                    }
-                };
-
-                queue.add(jsonObjectRequest);
+                });
             }
         });
     }
